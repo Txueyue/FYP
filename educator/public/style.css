@@ -1,0 +1,74 @@
+
+
+.node {
+  cursor: pointer;
+}
+
+.node:hover {
+  stroke: black;
+  stroke-width: 0.2em;
+}
+
+.node--leaf {
+  fill: white;
+}
+
+.label {
+  font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-anchor: middle;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+}
+
+.label,
+.node--root,
+.node--leaf {
+  pointer-events: none;
+
+}
+
+.node--leaf{
+  stroke: grey;
+  stroke-width: 0.1em;
+}
+
+#title {
+  font: 26px sans-serif;
+  position: absolute;
+  top: -40px;
+  left: 450px;
+}
+.mean {
+stroke-width: 1px;
+stroke: red;
+}
+div.tooltip {   
+position: absolute;           
+text-align: left;           
+width: auto;                  
+height: auto;                 
+padding: 8px;             
+font: 12px sans-serif;        
+background: black;   
+border-radius: 0px;           
+pointer-events: none;  
+color: white;       
+}
+
+#targetIframe{
+  width: 680px; 
+  height: 600px; 
+  border: 0px;
+  overflow: hidden;
+}
+#targetIframe2{
+  width: 1500px; 
+  height: 900px; 
+  border: 0px;
+  overflow: hidden;
+}
+#targetIframe3{
+  width: 700px; 
+  height: 350px; 
+  border: 0px;
+  overflow: hidden;
+}

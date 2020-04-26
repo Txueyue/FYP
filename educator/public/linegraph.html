@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<title>Individual Weekly Line</title>
+<head>
+  <script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>
+</head>
+
+<body>
+<div id="linechart">
+  <p>Select a student:
+    <select id="Choice" onchange="extra(this)">
+      <option value="All">All</option>
+      <option value="u4001">u4001</option>
+      <option value="u4002">u4002</option>
+      <option value="u4003">u4003</option>
+      <option value="u4004">u4004</option>
+      <option value="u4005">u4005</option>
+      <option value="u4006">u4006</option>
+      <option value="u4007">u4007</option>
+      <option value="u4008">u4008</option>
+      <option value="u4009">u4009</option>
+      <option value="u4010">u4010</option>
+      <option value="u4011">u4011</option>
+      <option value="u4012">u4012</option>
+      <option value="u4013">u4013</option>
+      <option value="u4014">u4014</option>
+      <option value="u4015">u4015</option>
+      <option value="u4016">u4016</option>
+      <option value="u4017">u4017</option>
+      <option value="u4018">u4018</option>
+      <option value="u4019">u4019</option>
+      <option value="u4020">u4020</option>
+      <option value="u4021">u4021</option>
+      <option value="u4022">u4022</option>
+      <option value="u4023">u4023</option>
+      <option value="u4024">u4024</option>
+      <option value="u4025">u4025</option>
+      <option value="u4026">u4026</option>
+      <option value="u4027">u4027</option>
+      <option value="u4028">u4028</option>
+      <option value="u4029">u4029</option>
+      <option value="u4030">u4030</option>
+      <option value="u4031">u4031</option>
+      <option value="u4032">u4032</option>
+      <option value="u4033">u4033</option>
+      <option value="u4034">u4034</option>
+      <option value="u4035">u4035</option>
+      <option value="u4036">u4036</option>
+      <option value="u4037">u4037</option>
+      <option value="u4038">u4038</option>
+      <option value="u4039">u4039</option>
+      <option value="u4040">u4040</option>
+      <option value="u4041">u4041</option>
+      <option value="u4042">u4042</option>
+      <option value="u4043">u4043</option>
+      <option value="u4044">u4044</option>
+    </select>
+  </p></div>
+  <script>
+    var p, 
+      marg = { top: 30, right: 20, left: 50, bottom: 20},
+
+      w = 1000 - marg.left - marg.right,
+      h = window.innerHeight - 80 - marg.top - marg.bottom;
+    var u = w + marg.left + marg.right,
+      v = h + marg.top + marg.bottom + 25;
+
+    var p = d3.select('#linechart')
+      .append("svg")
+      .attr("width", u)
+      .attr("height", v)
+      .append("g")
+      .attr("transform", "translate(" + marg.left + "," + marg.top + ")");
+
+    function extra() {
+      var key = document.getElementById('Choice').value;
+      d3.selectAll('.lineGroup').each(function(d, i) {
+        if (d.key === key|| key == "All") {
+          d3.select('.' + d.key).style('opacity', 1);
+        } else {
+          d3.select('.' + d.key).style('opacity', 0);
+        }
+      });
+    }
+
+    var slots = ["week 1", "week 2", "week 3", " week 4", "week 5", "week 6", "week 7", "week 8", "week 9", "week 10", "week 11", "week 12", "week 13"];
+
+    d3.csv("data1.csv")
+      .row(function(d) {
+        return {
+          key: d.ID,
+          values: [+d.Score_1, +d.Score_2, +d.Score_3, +d.Score_4, +d.Score_5, +d.Score_6, +d.Score_7, +d.Score_8, +d.Score_9, +d.Score_10, +d.Score_11, +d.Score_12, +d.Score_13]
+        };
+      })
+      .get(function(error, data) {
+
+        var rangeX = d3.scalePoint().range([0,w], 0.5).domain(slots);
+        var rangeY = d3.scaleLinear().range([h, 0]).domain([0, 100]);
+        var xAxis = d3.axisBottom(rangeX).tickSize(-h*1.3);
+        var yAxis = d3.axisLeft(rangeY).tickSize(-w*1.3).ticks(10);
+
+
+        //adding the axes
+        p.append("g").call(xAxis).attr("transform", "translate(0," + (h) + ")");
+        p.append("g").call(yAxis);
+
+        //adding text to x- and y-axes
+        p.append("text").attr("x", (w - marg.right) / 2).attr("y", (h - marg.top + 60)).style("font-size", "14px").text("Week");
+        p.append("text").attr("transform", "rotate(-90)").attr("x", 0 - (h / 2)).attr("y", (marg.left - 87)).style("font-size", "14px").text("Score");
+
+       
+        var line = d3.line()
+          .x(function(d, i) {
+            return rangeX(slots[i]);
+          })
+          .y(function(d, i) {
+            return rangeY(d);
+          });
+
+        var color =  d3.scaleOrdinal(d3.schemeCategory10);
+        
+        var g = p.selectAll(".lineGroup")
+          .data(data)
+          .enter().append("g")
+          .attr("class", function(d, i) {
+            return "lineGroup " + d.key;
+          });
+
+        g.append("path")
+          .attr("class", "line")
+          .attr("d", function(d) {
+            return line(d.values);
+          })
+          .style("stroke", function(d, i) {
+            return color(i);
+          })
+          .attr("fill", "none");
+        
+        });
+  </script>
+  <script>
+  </script>
+</body>
+
+</html>
