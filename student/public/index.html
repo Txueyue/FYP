@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Student Dashboard</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  </head>
+  <style>
+
+    .box {
+        border: 2px solid green ;
+        width: 200px; 
+        height: 40px;
+        margin-left: auto ;
+        margin-right: auto ;
+        text-align: auto ;
+        }
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 2px;
+}
+    .info{
+        font-size: 20px;
+    }
+    img {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+}
+</style>
+
+  <body>
+    <h1 style="text-align:center">Student Dashboard</h1><br>
+<div class="info">
+    <p> Name: &nbsp; <span id="name"></span> &emsp;&emsp;&emsp;
+        Matriculation No: &nbsp; <span id="matrixno"></span>
+    </p>
+</div>
+
+<img src="levi.png" alt="userphoto" width="150"
+     height="100">
+
+<div class= "box">
+    <p> Your Average Score: <span id="avgscore"></span></p>
+</div>
+<br>
+    <canvas id="myChart" width="200" height="100"></canvas>
+
+    <script>
+
+      window.addEventListener('load', setup);
+      async function setup() {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const value = await getData();
+        const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: value.week,
+            datasets: [
+              {
+                label: 'My weekly scores',
+                data: value.output,
+                fill: false,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderWidth: 1
+              },
+              {
+                label: 'Weekly average score of cohort',
+                data: [58.27,	63.68,	65.51,	70.64,	71,	69.64,	73.73,	74,	74.64,	67.86,	72.64,	70.41,	73.64],
+                fill: false,
+                borderColor: 'green',
+                backgroundColor: 'green',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: { 
+              scales: {
+                yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }]}}
+        });
+ 
+    }
+
+      async function getData() {
+        // const response = await fetch('test.csv');
+        //get data from your excel/csv and convert into array.
+        const response = await fetch('DATA1.csv');
+        //console.log(response);
+        const data = await response.text();
+        const ID = [];
+        const mean = [];
+        const studentresult =[];
+        const week = ['week 1', 'week 2','week 3','week 4','week 5','week 6','week 7','week 8','week 9','week 10','week 11','week 12','week 13'];
+        var output, studentname, matrix;
+        const rows = data.split('\n').slice(1);
+        //for each row
+        //console.log(data);
+        //console.log(rows);
+        var searchNumber = "u4006";
+        rows.forEach(row => {
+          //splitting the data into individual rows
+        const cols = row.split(',');
+        //console.log(cols);
+        if (cols[0] == searchNumber){
+            output = cols;
+           //console.log(output);
+           matrix= output[0];
+           studentname= output[1];
+           output.shift();
+           output.shift();        
+        }
+        });
+
+        document.getElementById("name").innerHTML = studentname;
+        document.getElementById("matrixno").innerHTML = matrix;
+        document.getElementById("avgscore").innerHTML = Math.round(d3.mean(output));
+        return { output, week};
+
+        
+    }
+ 
+</script>
+
+  </body>
+</html>
